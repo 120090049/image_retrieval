@@ -1,0 +1,5 @@
+# 忽略 ImageDB/images 目录下的所有文件
+ImageDB/images/*
+
+# 忽略 ImageDB/videos 目录下的所有 .mp4 文件
+ImageDB/videos/*.mp4
