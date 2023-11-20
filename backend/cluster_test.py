@@ -56,17 +56,20 @@ def feature_cmp(test_image_feature, features_in_data_base, frame_count, frame_li
 if __name__ == '__main__':
     
     frame_list = "E:/CSC3170/ImageDB/videos/frame_list/COD.npy"  
-    fea_path = "E:/CSC3170/ImageDB/feature/COD.npy"  # the retrieved feature from the video (stored in the database, size=115*512）
-    data = np.load(fea_path)
-
+    fea_path = "E:/CSC3170/ImageDB/feature/COD.npy"  
+    data = np.load(fea_path) # the retrieved feature from the video (stored in the database, size=115*512）
     features_in_data_base = data
-    
+
     # There are 115 feature in the database, select one you want to use as test case
     test_image_feature_index = 2
     test_image_feature = data[test_image_feature_index]
     
-    index, res = feature_cmp(test_image_feature, features_in_data_base, 1712, 'E:/CSC3170/ImageDB/videos/frame_list/COD.npy', 57)
+    # clustering operation on features_in_data_base
+    # YOUR CLUSTERING METHOD: TO BE CONTINUE
     
+    
+    
+    index, res = feature_cmp(test_image_feature, features_in_data_base, 1712, 'E:/CSC3170/ImageDB/videos/frame_list/COD.npy', 57)
     print("The index of most matching frame = ", index/15)
     print("Time in video = ", res)
     
