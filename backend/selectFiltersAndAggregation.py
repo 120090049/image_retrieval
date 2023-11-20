@@ -2,7 +2,7 @@ import os
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 from sklearn.preprocessing import normalize as sknormalize
-from networkFeatureExtract.featureExtract_VGG16 import extract_VGG16_feature_noSaved, VGG16, preprocess_input, image
+from featureExtract_VGG16 import extract_VGG16_feature_noSaved, VGG16, preprocess_input, image
 from utils import image_border
 
 def useImgPathGet1DFeatureNoSaved(imgPath, model):

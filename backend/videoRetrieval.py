@@ -84,9 +84,10 @@ def videoRetrievalForRetrieval(model, imgPath, videoFeaturePath, frame_count, fr
 def uploadedVideoExtractAggregateFeature(model, videoPath, extract_feature_path, extract_img_path=None):
     """
     针对上传的视频与特征提取与保存
-    :param videoPath: 视频的地址
-    :param extract_feature_path: 特征保存在哪里
     :param model: VGG16
+    :param videoPath: 视频的地址
+    :param extract_feature_path: 特征保存的地址
+    :param if there are extract_img_path, save extracted image (not necessary)
     :return: success
     """
     video_file_name = videoPath.split("/")[-1]
