@@ -61,7 +61,7 @@ if __name__ == '__main__':
     features_in_data_base = data
 
     # There are 115 feature in the database, select one you want to use as test case
-    test_image_feature_index = 2
+    test_image_feature_index = 20
     test_image_feature = data[test_image_feature_index]
     
     # clustering operation on features_in_data_base
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     
     
     index, res = feature_cmp(test_image_feature, features_in_data_base, 1712, 'E:/CSC3170/ImageDB/videos/frame_list/COD.npy', 57)
-    print("The index of most matching frame = ", index/15)
+    print("Frame = ", index, "The index of most matching frame = ", index/15)
     print("Time in video = ", res)
     
  
