@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">Z
+</header>
+<body class="hold-transition sidebar-mini">
+<script th:src="@{/admin/plugins/layui/layui.js}"></script>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+    #imgNum{
+        width: 80px;
+    }
+</style>
+<script>
+    layui.use(['upload', 'element', 'layer'], function(){
+        var $ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,layer = layui.layer;
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: '/admin/upload/imgRetrieval' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            ,accept: 'images'
+            ,data: {
+                imgNum: function () {
+                    return $('#imgNum').val();
+                }
+            }
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#icon').attr("style","display:none");
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                // 上传成功的一些操作
+                var longString = res.data;
+                var ip = res.msg;
+                // console.log(ip);
+                var prefix = "http://"+ip+":8080/static/showImg/";
+                var imgArr = longString.split("?");
+                var showImg = $('#showImg');
+                showImg.html(' '); // 先置空
+                for(var i = 0; i < imgArr.length; i++){
+                    var img = imgArr[i];
+                    var messageArr = img.split("!");
+                    var path = prefix+messageArr[0];
+                    // console.log(path);
+                    var shootTime = messageArr[1];
+                    var workerId = messageArr[2];
+                    showImg.append('<div class="col-sm-5 col-md-3"><div class="thumbnail"><img data-src="holder.js/100%x200" alt="100%x200" src="'
+                        + path +
+                        '" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;"><div class="caption"><p>拍摄时间：'
+                        + shootTime +'</p><p>当值员工工号：'+workerId+'</p></div></div></div>');
+                }
+                $('#demoText').html(''); //置空上传失败的状态
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+            //进度条
+            ,progress: function(n, elem, e){
+                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                if(n == 100){
+                    layer.msg('检索中...', {icon: 1});
+                }
+            }
+        });
+    });
+</script>
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">基于图像库的场景定位</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <!-- layui 上传图片并回显 -->
+                        <div class="layui-upload">
+                            <div class="layui-form-item">
+                                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                                <div class="layui-form-mid layui-word-aux">请输入返回数量：</div>
+                                <div class="layui-input-inline" style="width: 100px">
+                                    <input type="number" required="required" value="4" id="imgNum" name="imgNum" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-upload-list">
+                                <i class="layui-icon layui-icon-picture" id="icon"></i>
+                                <img class="layui-upload-img" id="demo1" width="20%">
+                                <p id="demoText"></p>
+                            </div>
+                            <div style="width: 95px;" >
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 这是一条线 -->
+                        <hr class="layui-border-blue">
+                        <div class="page-header">
+                            <h3><small>定位结果如下：</small></h3>
+                        </div>
+                        <!-- 展示检索到的图片 -->
+                        <div class="bs-example" data-example-id="thumbnails-with-custom-content">
+                            <div id="showImg" class="row">
+                            </div>
+                        </div>
+                        <!-- 这是一条线 -->
+                        <hr class="layui-border-blue">
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+            <div class="container-fluid">
+                <p style="color: red">使用说明：</p><br>
+                <p style="color: red">1.在输入框中输入需要返回的图像数量。</p><br>
+                <p style="color: red">2.点击“上传图片”按钮上传场景图像进行场景定位。</p><br>
+            </div>
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+</body>
+</html>

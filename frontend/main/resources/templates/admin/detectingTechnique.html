@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<body class="hold-transition sidebar-mini">
+<script th:src="@{/admin/plugins/layui/layui.js}"></script>
+<div class="wrapper">
+  <!-- 引入页面头header-fragment -->
+  <div th:replace="admin/header::header-nav"></div>
+  <!-- 引入工具栏sidebar-fragment path变量用于选用激活编程蓝色底色 -->
+  <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>基于图像库的场景定位</h3>
+              </div>
+              <div class="icon">
+                <i class="fa fa-bookmark"></i>
+              </div>
+              <a th:href="@{/admin/imageRetrieval}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>基于视频的场景定位</h3>
+              </div>
+              <div class="icon">
+                <i class="fa fa-tags"></i>
+              </div>
+              <a th:href="@{/admin/videoRetrieval}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3>装配场景目标物体检测</h3>
+              </div>
+              <div class="icon">
+                <i class="fa fa-heart"></i>
+              </div>
+              <a th:href="@{/admin/foreignObject}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <div class="row describe">
+          <img class="col-lg-4 col-4" th:src="@{/admin/dist/img/picture.png}">
+          <img class="col-lg-4 col-4" th:src="@{/admin/dist/img/picture.png}">
+          <img class="col-lg-4 col-4" th:src="@{/admin/dist/img/foreignObject.png}">
+        </div>
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- 引入页脚footer-fragment -->
+  <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+</body>
+</html>

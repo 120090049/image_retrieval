@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<body class="hold-transition sidebar-mini">
+<script th:src="@{/admin/plugins/layui/layui.js}"></script>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+</style>
+<script>
+    layui.use(['upload', 'element', 'layer'], function(){
+        var $ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,layer = layui.layer;
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: '/admin/upload/videoRetrieval' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            ,accept: 'images'
+            ,data: {
+                videoName: function () {
+                    return $('.form-control option:selected').val();
+                }
+            }
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#icon').attr("style","display:none");
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                // 上传成功的一些操作
+                // console.log(res.data);
+                var data = res.data.split("=");
+                var arr = data[0].split(":");
+                var time = arr[0]+"时"+arr[1]+"分"+arr[2]+"秒";
+                var shootTime = data[1];
+                var div = $("#result");
+                while(div.get(0).firstChild){// 需要将jquery对象转成dom对象，使用jquery对象.get(0),转成dom对象
+                    div.get(0).removeChild(div.get(0).firstChild); // 反过来$(dom对象)，转成jquery对象
+                }
+                div.append('<p>视频中与场景图像最接近的时间为：'+time+',拍摄时间为：'+shootTime+'</p>');
+                var videoName = data[2];
+                var ip = res.msg;
+                var src = "/static/showVideo/"+videoName;
+                $("#videoPlayer").attr("src", src);
+                $('#demoText').html(''); //置空上传失败的状态
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+            //进度条
+            ,progress: function(n, elem, e){
+                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                if(n == 100){
+                    layer.msg('检索中...', {icon: 1});
+                }
+            }
+        });
+    });
+</script>
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">基于视频的场景定位</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <!-- 上传图片 -->
+                        <!-- layui 上传图片并回显 -->
+                        <div class="layui-upload">
+                            <div class="layui-form-item">
+                                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            </div>
+                            <div class="layui-upload-list">
+                                <i class="layui-icon layui-icon-picture" id="icon"></i>
+                                <img class="layui-upload-img" id="demo1" width="20%">
+                                <p id="demoText"></p>
+                            </div>
+                            <div style="width: 95px;" >
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 这是一条线 -->
+                        <hr class="layui-border-blue">
+                        <!-- 视频列表 -->
+                        <select class="form-control">
+                            <option class="videoName" th:each="video:${allVideos}" th:id="${video.videoId}" th:value="${video.videoName}" th:text="${video.videoName}">1</option>
+                        </select>
+                        <!-- 这是一条线 -->
+                        <hr class="layui-border-blue">
+                        <!-- 结果展示 -->
+                        <div class="alert alert-info" role="alert" id="result"></div>
+                        <!-- 这是一条线 -->
+                        <hr class="layui-border-blue">
+                        <!-- 展示视频 -->
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video controls="controls" class="embed-responsive-item" src="" id="videoPlayer"></video>
+                        </div>
+                        <div>
+                            <p style="color: red">使用说明：</p><br>
+                            <p style="color: red">1.在下拉框中选择要定位的视频。</p><br>
+                            <p style="color: red">2.点击“上传图片”按钮进行视频定位，结果显示在青色框中。</p>
+                        </div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jquery App -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">
+</header>
+<body class="hold-transition sidebar-mini">
+<script th:src="@{/admin/plugins/layui/layui.js}"></script>
+<script th:src="@{/admin/plugins/exif-js/exif.js}"></script>
+<script>
+    layui.use(['upload', 'element', 'layer'], function () {
+        var $ = layui.jquery
+            , upload = layui.upload
+            , element = layui.element
+
+        // 演示多图片列表
+        var uploadListIns = upload.render({
+            elem: '#testList'
+            , elemList: $('#demoList') //列表元素对象
+            , url: '/admin/upload/uploadToImageDB' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            , accept: 'images'
+            , multiple: true
+            , number: 0
+            , auto: false
+            , bindAction: '#testListAction'
+            , data: {
+                photoTime: function () {
+                    return $("#TimeOfTakePhoto").html();
+                }
+            }
+            , choose: function (obj) {
+                var that = this;
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                //读取本地文件
+                obj.preview(function (index, file, result) {
+                    // index: 得到文件索引
+                    // file: 得到文件对象
+                    // result: 得到文件base64编码，比如图片
+                    var takeTime = "now";
+                    EXIF.getData(file, function () {
+                        var info1 = EXIF.getTag(file, 'DateTimeOriginal');
+                        var oriObj = $("#TimeOfTakePhoto");
+                        //console.log("进来了。。。")
+                        if (info1 != null) {
+                            console.log(info1);
+                            takeTime = info1.toString();
+                            //console.log(takeTime)
+                            oriObj.html(oriObj.html() + file.name + "^" + info1 + "=");
+                        } else {
+                            console.log("没有DateTimeOriginal属性");
+                            oriObj.html(oriObj.html() + file.name + "^now=");
+                        }
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td>' + file.name + '</td>'
+                            , '<td class="takeTime">' + takeTime + '</td>'
+                            , '<td><div class="layui-progress" lay-filter="progress-demo-' + index + '"><div class="layui-progress-bar" lay-percent=""></div></div></td>'
+                            , '<td>'
+                            , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+
+                        //单个重传
+                        tr.find('.demo-reload').on('click', function () {
+                            obj.upload(index, file);
+                        });
+
+                        //删除
+                        tr.find('.demo-delete').on('click', function () {
+                            delete files[index]; //删除对应的文件
+                            tr.remove();
+                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                            var oriObj = $("#TimeOfTakePhoto"); // 获取存放时间的div对象
+                            oriObj.html("");
+                        });
+
+                        that.elemList.append(tr);
+                        element.render('progress'); //渲染新加的进度条组件
+                    });
+                });
+            }
+            , done: function (res, index, upload) { //成功的回调
+                console.log(index);
+                $("#TimeOfTakePhoto").html("");
+                var that = this;
+                //if(res.code == 0){ //上传成功
+                var tr = that.elemList.find('tr#upload-' + index)
+                    , tds = tr.children();
+                tds.eq(3).html(''); //清空操作
+                delete this.files[index]; //删除文件队列已经上传成功的文件
+                return;
+                //}
+                this.error(index, upload);
+            }
+            , allDone: function (obj) { //多文件上传完毕后的状态回调
+                //console.log(obj)
+            }
+            , error: function (index, upload) { //错误回调
+                var that = this;
+                var tr = that.elemList.find('tr#upload-' + index)
+                    , tds = tr.children();
+                tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+            }
+            , progress: function (n, elem, e, index) { //注意：index 参数为 layui 2.6.6 新增
+                element.progress('progress-demo-' + index, n + '%'); //执行进度条。n 即为返回的进度百分比
+            }
+        });
+    });
+</script>
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">装配场景图像上传</h3>
+                    </div> <!-- /.card-body -->
+                    <!-- 这个div是用来上传图片的 -->
+                    <div class="card-body">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-normal" id="testList">选择图片</button>
+                            <p style="color: red">注：请不要上传名称相同的图像文件，文件名不能含有^和=</p>
+                            <div class="layui-upload-list" style="max-width: 1000px;">
+                                <table class="layui-table">
+                                    <colgroup>
+                                        <col>
+                                        <col width="200">
+                                        <col width="260">
+                                        <col width="150">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th>图片名</th>
+                                        <th>拍摄时间</th>
+                                        <th>上传进度</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="demoList"></tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+                            <p style="color: blue">图像上传后要去<b>信息补全页面</b>补充可能缺失的图像采集时间</p>
+                        </div>
+                        <!-- 存放照片的拍摄时间 -->
+                        <div style="visibility: hidden" id="TimeOfTakePhoto"></div>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- image-picker -->
+<!--<script th:src="@{/admin/plugins/image-picker/query.masonry.min.js}"></script>-->
+<script th:src="@{/admin/plugins/image-picker/image-picker.min.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+</body>
+</html>

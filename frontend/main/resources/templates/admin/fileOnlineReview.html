@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在线预览</title>
+</head>
+<style>
+    #fileFrame{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+</style>
+<script>
+    function changeFrameHeight() {
+        var ifm = document.getElementById("fileFrame");
+        ifm.height = document.documentElement.clientHeight;
+    }
+    window.onresize=function (){
+        changeFrameHeight();
+    }
+</script>
+<body>
+  <!-- 文件在线预览http://"+ip+":8080/admin/showImg/ -->
+  <div th:if="${fileType=='pdf'}">
+      <iframe onload="changeFrameHeight()" id="fileFrame" th:src="'http://'+${ip}+':8080/admin/showFile/'+${realPath}" scrolling="no" frameborder="0">
+      </iframe>
+  </div>
+  <div th:if="${fileType=='jpg'}">
+      <img th:src="'http://'+${ip}+':8080/admin/showFile/'+${realPath}"/>
+  </div>
+</body>
+</html>

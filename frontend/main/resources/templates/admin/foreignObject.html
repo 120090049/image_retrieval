@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">Z
+</header>
+<body class="hold-transition sidebar-mini">
+<script th:src="@{/admin/plugins/layui/layui.js}"></script>
+<style>
+    #container{
+        position: relative;
+    }
+    #canvasOverride{
+        position: absolute;
+        /*transform: scaleX(-1);*/
+        z-index: 1;
+    }
+    #video{
+        z-index: 0;
+    }
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+</style>
+<script>
+    window.onload = function () {
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const clearButton = document.getElementById('clearButton');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const result = document.getElementById('result');
+        const canvasOverride = document.getElementById('canvasOverride');
+        const ctx = canvasOverride.getContext('2d');
+        let timerId;
+
+        // 判断是什么设备访问的
+        const userAgent = navigator.userAgent;
+        const isIOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        const isAndroid = userAgent.indexOf('Android')>-1||userAgent.indexOf('Linux')>-1;//g
+        const isDesktop = !isIOS && !isAndroid;
+
+        if(isIOS){
+            // alert("进IOS方法了"); // success
+            const constraints = { // 访问苹果手机摄像头
+                video: {
+                    facingMode: {
+                        exact: "environment" // 使用后置摄像头，如果要使用前置摄像头，将值改为 "user"
+                    }
+                }
+            };
+            // alert("创建摄像头对象"); // 到达
+            let isOpen = navigator.mediaDevices.getUserMedia(constraints); // 苹果摄像头
+            //alert("打开成功否："+isOpen); // 到不了这个地方
+            isOpen.then(stream => {
+                video.srcObject = stream;
+                video.play();
+                //alert("播放成功");
+            }).catch(err => {
+                alert("访问摄像头失败：", err);
+            });
+        }else if(isAndroid){
+            let constraints = {
+                video:{
+                    height: 480,
+                    width: 640
+                },
+                audio: false,
+            }
+            let isOK = navigator.mediaDevices.getUserMedia(constraints);
+            isOK.then(res =>{
+                video.srcObject = res;
+                video.play();
+            }).catch((err) =>{
+                alert(err);
+            });
+        }else{
+            // 获取相机视频流
+            console.log("台式机");
+            navigator.mediaDevices.getUserMedia({video: true}) // 电脑摄像头
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices.', error);
+                });
+        }
+
+        // 开始定时器
+        startButton.addEventListener('click', () => {
+            $("#startButton").addClass("layui-btn-disabled").attr("disabled",true);
+            $("#stopButton").removeClass("layui-btn-disabled").attr("disabled",false);
+            timerId = setInterval(() => {
+                // 将视频画面绘制到画布上
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // 将画布内容转换成图片数据URL
+                const imageUrl = canvas.toDataURL('image/jpeg');
+
+                // 将图片上传到后端
+                fetch('/admin/upload/test', {
+                    method: 'POST',
+                    body: imageUrl
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Failed to process image.');
+                    }
+                }).then(text => {
+                    pain(text);
+                    //result.textContent = text;
+                }).catch(error => {
+                    console.error(error);
+                });
+            }, 200);
+        });
+
+        // 绘图函数
+        function pain(text){
+            canvasOverride.width = video.videoWidth;
+            canvasOverride.height = video.videoHeight;
+            var resLength = text.length;
+            if(resLength > 1){
+                var arr = text.substring(0, resLength-1).split(";");
+                var remainderCount = arr.length;
+                // 多余物数量
+                result.textContent = "装配场景目标物体有" + remainderCount + "个";
+
+                for (let i = 0; i < arr.length; i++) {
+                    metaMessage = arr[i]; // b'remainder 0.85',338,432,418,537
+                    var arrEach = metaMessage.split(","); // ["b'remainder 0.85'", '338', '432', '418', '537']
+                    var classAndPrecisionLength = arr[0].length
+                    var classAndPrecision = arrEach[0].substring(2, classAndPrecisionLength-2); // remainder 0.85'
+                    var top = arrEach[1]; // 上
+                    var left = arrEach[2]; // 左
+                    var bottom = arrEach[3]; // 下
+                    var right = arrEach[4]; // 右
+                    // 开始画图
+                    ctx.strokeStyle = "red";
+                    ctx.lineWidth = 4;
+                    ctx.strokeRect(left, top, right-left, bottom-top);
+
+                    // 写文字
+                    ctx.fillStyle = 'red';
+                    ctx.font = '24px Times New Roman';
+                    ctx.fillText(classAndPrecision, left, top-25);
+                }
+            }
+        }
+
+        // 停止定时器
+        stopButton.addEventListener('click', () => {
+            clearInterval(timerId);
+            $("#startButton").removeClass("layui-btn-disabled").attr("disabled",false);
+            $("#stopButton").addClass("layui-btn-disabled").attr("disabled",true);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // 清除边框
+        clearButton.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // 将Data URL转换为Blob对象
+        function dataURLtoBlob(dataURL) {
+            var arr = dataURL.split(',');
+            var mime = arr[0].match(/:(.*?);/)[1];
+            var bstr = atob(arr[1]);
+            var n = bstr.length;
+            var u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+    }
+</script>
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">装配场景目标物体检测</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="layui-form-item">
+                        <button type="button" class="layui-btn" id="startButton">开始检测</button>
+                        <button type="button" class="layui-btn layui-btn-disabled" id="stopButton">停止检测</button>
+                        <button type="button" class="layui-btn" id="clearButton">清除边框</button>
+                    </div>
+                    <br>
+                    检测结果：<div id="result"></div>
+                    <br>
+                    <div id="container">
+                        <canvas id="canvasOverride" width="640" height="480"></canvas>
+                        <video id="video" width="640" height="480"></video>
+                    </div>
+                    <canvas id="canvas" width="640" height="480" style="visibility: hidden"></canvas>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+</body>
+</html>

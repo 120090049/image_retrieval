@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.sfwebsystem.dao.WorkerScheduleMapper">
+    <!-- 映射关系 -->
+    <resultMap id="BaseResultMap" type="com.ssj.sfwebsystem.entity.WorkSchedule">
+        <id column="time_id" jdbcType="BIGINT" property="timeId"/>
+        <result column="emp_id" jdbcType="BIGINT" property="empId"/>
+        <result column="emp_worker_id" jdbcType="VARCHAR" property="empWorkerId"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <result column="group" jdbcType="VARCHAR" property="group"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+    </resultMap>
+
+    <!-- 表的所有列名 -->
+    <sql id="Base_Column_List">
+        time_id,emp_id,emp_worker_id,emp_name,department,group,start_time,end_time,comment
+    </sql>
+
+    <!-- 选择性添加文件信息 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="timeId"
+            parameterType="com.ssj.sfwebsystem.entity.WorkSchedule">
+        INSERT INTO t_work_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="timeId != null">
+                time_id,
+            </if>
+            <if test="empId != null">
+                emp_id,
+            </if>
+            <if test="empWorkerId != null">
+                emp_worker_id,
+            </if>
+            <if test="empName != null">
+                emp_name,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="group != null">
+                group,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="timeId != null">
+                #{timeId,jdbcType=BIGINT},
+            </if>
+            <if test="empId != null">
+                #{empId,jdbcType=BIGINT},
+            </if>
+            <if test="empWorkerId != null">
+                #{empWorkerId,jdbcType=VARCHAR},
+            </if>
+            <if test="empName != null">
+                #{empName,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                #{group,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 分页查询所有文件 -->
+    <select id="selectAll" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_work_schedule
+        order by time_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+</mapper>

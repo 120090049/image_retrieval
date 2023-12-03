@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Image Positioning</title>
+    <!-- 自定义样式 -->
+    <style>
+        /* 设置背景图像 */
+        body {
+            background-image: url('https://news.ubc.ca/wp-content/uploads/2023/08/AdobeStock_559145847-1024x682.jpeg');
+            background-size: cover; /* 确保图片覆盖整个屏幕，且不重复 */
+            background-position: center; /* 图片居中显示 */
+            background-attachment: fixed; /* 背景图片固定，不随滚动条滚动 */
+        }
+
+        .content-header h1 {
+            text-align: center; /* 标题居中 */
+            font-size: 36px; /* 标题字体大小 */
+            color: white;
+        }
+
+        .layui-upload-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px; /* 增加边框的圆角 */
+            background-color: #007bff; /* 上传按钮背景颜色 */
+            color: white; /* 上传按钮文字颜色 */
+            border: 1px solid #007bff; /* 上传按钮边框颜色 */
+        }
+
+        .card {
+            margin: 0 auto; /* 水平居中 */
+            max-width: 600px; /* 最大宽度，根据需要调整 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加一些阴影以提升层次感 */
+            border-color: #007bff; /* 卡片边框颜色 */
+        }
+
+        .card-body {
+            background-color: #ffffff; /* 卡片内部背景颜色 */
+        }
+
+        #previewImage {
+            max-width: 100%;
+            height: auto;
+            margin-top: 15px; /* 图片上方留出一些空间 */
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini">
+    <!-- 页面主体内容 -->
+    <div class="content-wrapper">
+        <!-- 页面内容头部 -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <!-- 添加返回链接 -->
+                <a href="/back" href="/admin/first_page_threefunc.html">Back</a>
+
+                
+                <h1>Image Positioning</h1>
+            </div>
+        </div>
+
+        <!-- 主要内容 -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-body">
+                        <!-- 文件和图片上传部分 -->
+                        <form action="/upload" method="post" enctype="multipart/form-data">
+                            <!-- 选择图片上传 -->
+                            <button type="button" class="layui-btn" id="testList">Choose File</button>
+                            <input class="layui-upload-file" type="file" accept="image/*" name="imageUpload" id="imageUpload" required>
+    
+                            <!-- 显示上传的图片 -->
+                            <img id="previewImage" src="#" alt="Uploaded Image" style="display:none; max-width: 100%; height: auto;" />
+
+                            <!-- 选择电影 -->
+                            <div>
+                                <label for="movieInput">What movie do you choose:</label>
+                                <input type="text" id="movieInput" name="movieInput" required>
+                            </div>
+    
+                            <!-- 确认按钮 -->
+                             <button type="submit" class="layui-btn" id="testListAction">Ensure</button>
+                        </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义的脚本 -->
+    <script>
+        // 显示上传的图片
+        document.getElementById('imageUpload').addEventListener('change', function() {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    
+</body>
+</html>

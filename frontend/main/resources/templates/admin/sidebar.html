@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="sidebar-fragment(path)" class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a th:href="@{/admin/index}" class="brand-link">
+        <img th:src="@{/admin/dist/img/SHULogo.jpg}" alt="ssm-cluster Logo" class="brand-image img-circle elevation-3"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">SHU-System</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                     with font-awesome or any other icon font library -->
+                <li class="nav-header">Dashboard</li>
+                <li class="nav-item">
+                    <!-- 每一个标签都会判断是否是选用该按钮，选中就底色变蓝 -->
+                    <a th:href="@{/admin/index}" th:class="${path}=='index'?'nav-link active':'nav-link'">
+                        <i class="nav-icon fa fa-dashboard"></i>
+                        <p>
+                            管理首页
+                        </p>
+                    </a>
+                </li>
+                <hr class="layui-border-black">
+                <li class="nav-item">
+                    <a th:href="@{/admin/detectingTechnique}" th:class="${path}=='detectingTechnique'?'nav-link active':'nav-link'">
+                        <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                        <p>检测功能</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/imageRetrieval}" th:class="${path}=='imageRetrieval'?'nav-link active':'nav-link'">
+                        <p>基于图像库场景定位</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/videoRetrieval}" th:class="${path}=='videoRetrieval'?'nav-link active':'nav-link'">
+                        <p>基于视频的场景定位</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/foreignObject}" th:class="${path}=='foreignObject'?'nav-link active':'nav-link'">
+                        <p>装配场景目标物体检测</p>
+                    </a>
+                </li>
+                <hr class="layui-border-black">
+                <li class="nav-item">
+                    <a th:href="@{/admin/modifyInformation}" th:class="${path}=='modifyInformation'?'nav-link active':'nav-link'">
+                        <i class="fa fa-bookmark nav-icon" aria-hidden="true"></i>
+                        <p>信息维护</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/imageUpload}" th:class="${path}=='imageUpload'?'nav-link active':'nav-link'">
+                        <p>图像上传</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/imageIncomplete}" th:class="${path}=='imageIncomplete'?'nav-link active':'nav-link'">
+                        <p>图像信息补全</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/imageModifyAndDelete}" th:class="${path}=='imageModifyAndDelete'?'nav-link active':'nav-link'">
+                        <p>图像信息修改</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/uploadVideo}" th:class="${path}=='uploadVideo'?'nav-link active':'nav-link'">
+                        <p>视频上传</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/videoIncomplete}" th:class="${path}=='videoIncomplete'?'nav-link active':'nav-link'">
+                        <p>视频信息补全</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/videoModifyAndDelete}" th:class="${path}=='videoModifyAndDelete'?'nav-link active':'nav-link'">
+                        <p>视频信息修改</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/fileUpload}" th:class="${path}=='fileUpload'?'nav-link active':'nav-link'">
+                        <p>文件数据上传</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/fileSearch}" th:class="${path}=='fileSearch'?'nav-link active':'nav-link'">
+                        <p>文件数据检索与修改</p>
+                    </a>
+                </li>
+                <hr class="layui-border-black">
+                <li class="nav-item">
+                    <a th:href="@{/admin/systemManagement}" th:class="${path}=='systemManagement'?'nav-link active':'nav-link'">
+                        <i class="fa fa-tags nav-icon" aria-hidden="true"></i>
+                        <p>系统管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/updatePassword}" th:class="${path}=='updatePassword'?'nav-link active':'nav-link'">
+                        <p>修改密码</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/updatePasswordForAdmin}" th:class="${path}=='updatePasswordForAdmin'?'nav-link active':'nav-link'">
+                        <p>管理员修改密码</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/logout}" class="nav-link">
+                        <p>安全退出</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+</html>

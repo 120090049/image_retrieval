@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.sfwebsystem.dao.EmployeeMapper">
+    <!-- 映射关系 -->
+    <resultMap id="BaseResultMap" type="com.ssj.sfwebsystem.entity.Employee">
+        <id column="emp_id" jdbcType="BIGINT" property="empId"/>
+        <result column="emp_worker_id" jdbcType="VARCHAR" property="empWorkerId"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <result column="group" jdbcType="VARCHAR" property="group"/>
+        <result column="join_time" jdbcType="DATE" property="joinTime"/>
+        <result column="emp_type" jdbcType="TINYINT" property="empType"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+    </resultMap>
+
+    <!-- 表的所有列名 -->
+    <sql id="Base_Column_List">
+        emp_id,emp_worker_id,emp_name,department,`group`,join_time,emp_type,password
+    </sql>
+
+    <!-- 选择性添加员工信息 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="empId"
+            parameterType="com.ssj.sfwebsystem.entity.Employee">
+        INSERT INTO t_employee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">
+                emp_id,
+            </if>
+            <if test="empWorkerId != null">
+                emp_worker_id,
+            </if>
+            <if test="empName != null">
+                emp_name,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="group != null">
+                `group`,
+            </if>
+            <if test="joinTime != null">
+                join_time,
+            </if>
+            <if test="empType != null">
+                emp_type,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">
+                #{empId,jdbcType=BIGINT},
+            </if>
+            <if test="empWorkerId != null">
+                #{empWorkerId,jdbcType=VARCHAR},
+            </if>
+            <if test="empName != null">
+                #{empName,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                #{group,jdbcType=VARCHAR},
+            </if>
+            <if test="joinTime != null">
+                #{joinTime,jdbcType=DATE},
+            </if>
+            <if test="empType != null">
+                #{empType,jdbcType=TINYINT},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据主键查找员工信息 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_employee
+        where emp_id = #{empId,jdbcType=BIGINT} limit 1
+    </select>
+
+    <!-- 根据工号查找员工信息 -->
+    <select id="selectByWorkId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_employee
+        where emp_worker_id = #{workId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="login" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_employee
+        where emp_worker_id = #{userName,jdbcType=VARCHAR} and password = #{passwordMd5,jdbcType=VARCHAR} and (emp_type = 0 or emp_type = 1 or emp_type = 2);
+    </select>
+
+    <!-- 根据信息状态修改员工信息 -->
+    <update id="updateEmployee" parameterType="com.ssj.sfwebsystem.entity.Employee">
+        update t_employee
+        <set>
+            <if test="empName != null">
+                emp_name = #{empName,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="group != null">
+                `group` = #{group,jdbcType=VARCHAR},
+            </if>
+            <if test="empType != null">
+                emp_type = #{empType,jdbcType=TINYINT},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where emp_id = #{empId,jdbcType=BIGINT}
+    </update>
+
+    <!--根据主键删除图片-->
+    <update id="deleteById" parameterType="java.lang.Long">
+        UPDATE t_employee SET emp_type = 3
+        where emp_id = #{empId,jdbcType=BIGINT}
+    </update>
+</mapper>

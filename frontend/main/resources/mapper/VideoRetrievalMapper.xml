@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.sfwebsystem.dao.VideoRetrievalMapper">
+    <!-- 映射关系 -->
+    <resultMap id="BaseResultMap" type="com.ssj.sfwebsystem.entity.Video">
+        <id column="video_id" jdbcType="BIGINT" property="videoId"/>
+        <result column="video_path" jdbcType="VARCHAR" property="videoPath"/>
+        <result column="cover_img_path" jdbcType="VARCHAR" property="coverImgPath"/>
+        <result column="video_name" jdbcType="VARCHAR" property="videoName"/>
+        <result column="upload_time" jdbcType="TIMESTAMP" property="uploadTime"/>
+        <result column="shoot_start_time" jdbcType="TIMESTAMP" property="shootStartTime"/>
+        <result column="duration" jdbcType="DOUBLE" property="duration"/>
+        <result column="uploader_id" jdbcType="VARCHAR" property="uploaderId"/>
+        <result column="msg_status" jdbcType="TINYINT" property="msgStatus"/>
+        <result column="video_feature_path" jdbcType="VARCHAR" property="videoFeaturePath"/>
+        <result column="frame_count" jdbcType="DOUBLE" property="frameCount"/>
+        <result column="frame_list_path" jdbcType="VARCHAR" property="frameListPath"/>
+    </resultMap>
+
+    <!-- 表的所有列名 -->
+    <sql id="Base_Column_List">
+        video_id,video_path,cover_img_path,video_name,upload_time,shoot_start_time,duration,uploader_id,msg_status,video_feature_path,frame_count,frame_list_path
+    </sql>
+
+    <!-- 选择性添加视频信息 -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="videoId"
+            parameterType="com.ssj.sfwebsystem.entity.Video">
+        INSERT INTO t_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">
+                video_id,
+            </if>
+            <if test="videoPath != null">
+                video_path,
+            </if>
+            <if test="coverImgPath != null">
+                cover_img_path,
+            </if>
+            <if test="videoName != null">
+                video_name,
+            </if>
+            <if test="uploadTime != null">
+                upload_time,
+            </if>
+            <if test="shootStartTime != null">
+                shoot_start_time,
+            </if>
+            <if test="duration != null">
+                duration,
+            </if>
+            <if test="uploaderId != null">
+                uploader_id,
+            </if>
+            <if test="msgStatus != null">
+                msg_status,
+            </if>
+            <if test="videoFeaturePath != null">
+                video_feature_path,
+            </if>
+            <if test="frameCount != null">
+                frame_count,
+            </if>
+            <if test="frameListPath != null">
+                frame_list_path,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">
+                #{videoId,jdbcType=BIGINT},
+            </if>
+            <if test="videoPath != null">
+                #{videoPath,jdbcType=VARCHAR},
+            </if>
+            <if test="coverImgPath != null">
+                #{coverImgPath,jdbcType=VARCHAR},
+            </if>
+            <if test="videoName != null">
+                #{videoName,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shootStartTime != null">
+                #{shootStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="uploaderId != null">
+                #{uploaderId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStatus != null">
+                #{msgStatus,jdbcType=TINYINT},
+            </if>
+            <if test="videoFeaturePath != null">
+                #{videoFeaturePath,jdbcType=VARCHAR},
+            </if>
+            <if test="frameCount != null">
+                #{frameCount,jdbcType=DOUBLE},
+            </if>
+            <if test="frameListPath != null">
+                #{frameListPath,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <!-- 根据信息状态修改视频信息 -->
+    <update id="updateByMsgStatus" parameterType="com.ssj.sfwebsystem.entity.Video">
+        update t_video
+        <set>
+            <if test="shootStartTime != null">
+                shoot_start_time = #{shootStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=DOUBLE},
+            </if>
+            <if test="uploaderId != null">
+                uploader_id = #{uploaderId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStatus != null">
+                msg_status = #{msgStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where video_id = #{videoId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 只改一个时间信息，status也改 -->
+    <update id="updateById" parameterType="com.ssj.sfwebsystem.entity.Video">
+        update t_video
+        <set>
+            <if test="shootStartTime != null">
+                shoot_start_time = #{shootStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="videoName != null">
+                video_name = #{videoName,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStatus != null">
+                msg_status = #{msgStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where video_id = #{videoId,jdbcType=BIGINT}
+    </update>
+
+    <!--根据主键删除视频-->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        UPDATE t_video SET msg_status = 2
+        where video_id = #{videoId,jdbcType=BIGINT}
+    </update>
+
+    <!--批量删除-->
+    <update id="deleteBatch">
+        update t_video
+        set msg_status=2 where video_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--  查找视频相关数据分页  -->
+    <select id="selectAllVideosMessage" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where msg_status=0
+        order by video_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!--  查找视频信息不完整的数据分页  -->
+    <select id="selectIncompleteVideos" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where uploader_id=#{uploaderId} and (msg_status=1 or shoot_start_time=#{shootTime})
+        order by video_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!-- 直接查找视频信息，不分页 -->
+    <select id="selectAllByMsgStatus" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where msg_status=0
+        order by video_id desc
+    </select>
+
+    <!-- 根据id查找视频 -->
+    <select id="selectByVideoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where msg_status=0 and video_id = #{id}
+    </select>
+
+    <!-- 根据id查找视频不完整信息的视频 -->
+    <select id="selectByVideoIdIncomplete" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where msg_status=1 and video_id = #{id}
+    </select>
+
+    <!-- 查找所有信息完整的的视频信息 -->
+    <select id="selectVideosForAll" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where msg_status=0
+        order by video_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="selectByVideoName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_video
+        where msg_status=0 and video_name = #{videoName}
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        select count(*)
+        from t_video
+        where msg_status = 0
+    </select>
+</mapper>

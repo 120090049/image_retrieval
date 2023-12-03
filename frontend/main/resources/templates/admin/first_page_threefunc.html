@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Film System</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://news.ubc.ca/wp-content/uploads/2023/08/AdobeStock_559145847-1024x682.jpeg');
+            background-size: cover;
+            font-family: Arial, sans-serif; /* 选择一个适合的字体 */
+        }
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            color: white; /* 确保标题颜色与背景图像有足够对比 */
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加文字阴影提高可读性 */
+        }
+        .card {
+            margin: 10px;
+            width: 350px; /* 调整为所需的大小 */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+            border-radius: 10px; /* 圆角边框 */
+            backdrop-filter: blur(5px); /* 背景模糊效果 */
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+        .card-body {
+            padding: 16px; /* 内边距 */
+            color: #333; /* 深色文字 */
+        }
+        .btn-primary {
+            background-color: #007bff; /* 使用一致的按钮颜色 */
+            border: none; /* 去除边框 */
+            color: white; /* 白色文字 */
+            text-transform: uppercase; /* 大写按钮文字 */
+            letter-spacing: 1px; /* 增加字母间距 */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* 按钮悬停效果 */
+        }
+        .card-title {
+            margin-bottom: 16px; /* 增加标题和按钮之间的空间 */
+            font-size: 24px; /* 增加标题字体大小 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* 标题文字阴影 */
+        }
+        /* 移除不必要的背景图片样式 */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Film System</h1>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Movie Information Retrieval</h5>
+            <button class="btn btn-primary btn-block">Go!</button>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Image Positioning</h5>
+            <a href="/functwo_page1" class="btn btn-primary btn-block">Go!</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Update movie</h5>
+            <a href="/functhree_page1" class="btn btn-primary btn-block">Go!</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+

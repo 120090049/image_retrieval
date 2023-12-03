@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.sfwebsystem.dao.ImageRetrievalMapper">
+    <!-- 映射关系 -->
+    <resultMap id="BaseResultMap" type="com.ssj.sfwebsystem.entity.Image">
+        <id column="image_id" jdbcType="BIGINT" property="imageId"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+        <result column="image_name" jdbcType="VARCHAR" property="imageName"/>
+        <result column="upload_time" jdbcType="TIMESTAMP" property="uploadTime"/>
+        <result column="shoot_time" jdbcType="TIMESTAMP" property="shootTime"/>
+        <result column="worker_id" jdbcType="VARCHAR" property="workerId"/>
+        <result column="uploader_id" jdbcType="VARCHAR" property="uploaderId"/>
+        <result column="msg_status" jdbcType="TINYINT" property="msgStatus"/>
+    </resultMap>
+
+    <!-- 表的所有列名 -->
+    <sql id="Base_Column_List">
+        image_id,image_path,image_name,upload_time,shoot_time,worker_id,uploader_id,msg_status
+    </sql>
+
+    <!-- 选择性添加图片信息 -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="imageId"
+            parameterType="com.ssj.sfwebsystem.entity.Image">
+        INSERT INTO t_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imageId != null">
+                image_id,
+            </if>
+            <if test="imagePath != null">
+                image_path,
+            </if>
+            <if test="imageName != null">
+                image_name,
+            </if>
+            <if test="uploadTime != null">
+                upload_time,
+            </if>
+            <if test="shootTime != null">
+                shoot_time,
+            </if>
+            <if test="workerId != null">
+                worker_id,
+            </if>
+            <if test="uploaderId != null">
+                uploader_id,
+            </if>
+            <if test="msgStatus != null">
+                msg_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imageId != null">
+                #{imageId,jdbcType=BIGINT},
+            </if>
+            <if test="imagePath != null">
+                #{imagePath,jdbcType=VARCHAR},
+            </if>
+            <if test="imageName != null">
+                #{imageName,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shootTime != null">
+                #{shootTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workerId != null">
+                #{workerId,jdbcType=VARCHAR},
+            </if>
+            <if test="uploaderId != null">
+                #{uploaderId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStatus != null">
+                #{msgStatus,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过图片名称查询图片信息 -->
+    <select id="selectImageByImageName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_image
+        where image_path = #{imageName,jdbcType=VARCHAR} and msg_status = 0 limit 1
+    </select>
+
+    <!-- 通过图片id查询图片信息 -->
+    <select id="selectImageById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_image
+        where image_id = #{imageId,jdbcType=BIGINT}
+    </select>
+    
+    <!-- 根据信息状态修改图片信息 -->
+    <update id="updateByMsgStatus" parameterType="com.ssj.sfwebsystem.entity.Image">
+        update t_image
+        <set>
+            <if test="shootTime != null">
+                shoot_time = #{shootTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workerId != null">
+                worker_id = #{workerId,jdbcType=VARCHAR},
+            </if>
+            <if test="uploaderId != null">
+                uploader_id = #{uploaderId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStatus != null">
+                msg_status = #{msgStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where image_id = #{imageId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 根据id修改图片信息 -->
+    <update id="updateById" parameterType="com.ssj.sfwebsystem.entity.Image">
+        update t_image
+        <set>
+            <if test="shootTime != null">
+                shoot_time = #{shootTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imageName != null">
+                image_name = #{imageName,jdbcType=VARCHAR},
+            </if>
+            <if test="workerId != null">
+                worker_id = #{workerId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStatus != null">
+                msg_status = #{msgStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where image_id = #{imageId,jdbcType=BIGINT}
+    </update>
+
+    <!--根据主键删除图片-->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        UPDATE t_image SET msg_status = 2
+        where image_id = #{imageId,jdbcType=BIGINT}
+    </update>
+
+    <!--批量删除-->
+    <update id="deleteBatch">
+        update t_image
+        set msg_status=2 where image_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--  查找信息不完整的图片并分页  -->
+    <select id="selectIncompleteImages" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_image
+        where uploader_id=#{uploaderId} and (msg_status=1 or shoot_time=#{shootTime})
+        order by image_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!-- 统计所有图片数量 -->
+    <select id="getTotalCount" resultType="int">
+        select count(*)
+        from t_image
+        where msg_status = 0
+    </select>
+
+    <!--  查找信息不完整的图片并分页  -->
+    <select id="selectImageList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_image
+        where msg_status = 0
+        order by image_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!-- 统计该索引前有几个图像 -->
+    <select id="selectCountById" parameterType="java.lang.Long" resultType="int">
+        select count(*)
+        from t_image
+        where (msg_status = 0 or msg_status = 1) and (image_id between 1 and #{imageId,jdbcType=BIGINT})
+    </select>
+</mapper>

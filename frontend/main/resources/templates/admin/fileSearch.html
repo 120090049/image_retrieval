@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<body class="hold-transition sidebar-mini">
+<script th:src="@{/admin/plugins/layui/layui.js}"></script>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+    .navbar-text{
+        font-weight: bold;
+        font-size: medium;
+        color: #363c69;
+    }
+</style>
+<script>
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+
+        //日期范围
+        laydate.render({
+            elem: '#test6'
+            //设置开始日期、日期日期的 input 选择器
+            //数组格式为 2.6.6 开始新增，之前版本直接配置 true 或任意分割字符即可
+            ,range: ['#test-startDate-1', '#test-endDate-1']
+        });
+    });
+</script>
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">文件检索</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <!-- 文件检索 -->
+                        <div class="grid-btn">
+                            <button class="btn btn-info" onclick="openFile()"><i
+                                    class="fa fa-edit"></i>&nbsp;查看
+                            </button>
+                            <button class="btn btn-default" onclick="fileEdit()"><i
+                                    class="fa fa-tree"></i>&nbsp;修改
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteFile()"><i
+                                    class="fa fa-trash-o"></i>&nbsp;删除
+                            </button>&nbsp;&nbsp;
+                        </div>
+                        <div class="grid-btn">
+                            <p class="navbar-text">文件名关键字</p>&nbsp;&nbsp;
+                            <input type="text" placeholder="请输入关键字" id="fileName" class="form-control col-2">&nbsp;&nbsp;
+                            <p class="navbar-text">上传者工号</p>&nbsp;&nbsp;
+                            <input type="text" placeholder="请输入上传者工号" id="uploaderId" class="form-control col-2">&nbsp;&nbsp;
+                            <!-- 搜索按钮 -->
+                            <button id="searchBtn" class="btn btn-info" onclick="search()">
+                                <i class="fa fa-search"></i>&nbsp;搜索
+                            </button>
+                        </div>
+                        <div class="grid-btn">
+                            <!-- 起始时间与结束时间 -->
+                            <p class="navbar-text">上传起始时间</p>&nbsp;&nbsp;
+                            <div class="layui-inline">
+                                <div class="layui-inline" id="test6">
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="test-startDate-1" class="layui-input" placeholder="请选择开始日期">
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="test-endDate-1" class="layui-input" placeholder="请选择结束日期">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- JqGrid必要DOM,用于创建表格展示列表数据 -->
+                        <table id="jqGrid" class="table table-bordered"></table>
+                        <!-- JqGrid必要DOM,分页信息区域 -->
+                        <div id="jqGridPager"></div>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="categoryModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form id="categoryForm">
+                                <div class="form-group">
+                                    <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
+                                        错误信息展示栏。
+                                    </div>
+                                </div>
+                                <input type="hidden" class="form-control" id="fileId" name="fileId">
+                                <div class="form-group">
+                                    <label for="fileNameForUpdate" class="control-label">文件名称:</label>
+                                    <input type="text" class="form-control" id="fileNameForUpdate" name="fileNameForUpdate"
+                                           placeholder="请输入文件名称" required="true">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveButton">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/fileSearch.js}"></script>
+</body>
+</html>

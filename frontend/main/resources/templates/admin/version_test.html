@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Positioning</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://news.ubc.ca/wp-content/uploads/2023/08/AdobeStock_559145847-1024x682.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            max-width: 95%;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Image Positioning</h2>
+    <form id="image-positioning-form">
+        <!-- Movie Upload Input -->
+        <div class="form-group">
+            <label for="movie-upload">Upload Figure</label>
+            <input type="file" id="movie-upload" name="movie-upload" accept="image/*">
+        </div>
+        <!-- Movie Selection Input -->
+        <div class="form-group">
+            <label for="movie-selection">What movie do you choose:</label>
+            <input type="text" id="movie-selection" name="movie-selection">
+        </div>
+        <!-- Submit Button -->
+        <button type="submit" class="btn">Ensure</button>
+    </form>
+</div>
+
+</body>
+</html>

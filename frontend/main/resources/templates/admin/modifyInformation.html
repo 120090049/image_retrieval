@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- 引入页面头header-fragment -->
+  <div th:replace="admin/header::header-nav"></div>
+  <!-- 引入工具栏sidebar-fragment path变量用于选用激活编程蓝色底色 -->
+  <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <p>装配场景<b>图像上传</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-bookmark"></i>
+              </div>
+              <a th:href="@{/admin/imageUpload}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <p>装配场景<b>图像信息补全</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-tags"></i>
+              </div>
+              <a th:href="@{/admin/imageIncomplete}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <p>装配场景<b>图像信息修改</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-heart"></i>
+              </div>
+              <a th:href="@{/admin/imageModifyAndDelete}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <p>装配场景<b>视频上传</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-bookmark"></i>
+              </div>
+              <a th:href="@{/admin/uploadVideo}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <p>装配场景<b>视频信息补全</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-tags"></i>
+              </div>
+              <a th:href="@{/admin/videoIncomplete}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <p>装配场景<b>视频信息修改</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-heart"></i>
+              </div>
+              <a th:href="@{/admin/videoModifyAndDelete}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <p>装配<b>文件数据上传</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-bookmark"></i>
+              </div>
+              <a th:href="@{/admin/fileUpload}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <p>装配<b>文件数据检索与修改</b></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-tags"></i>
+              </div>
+              <a th:href="@{/admin/fileSearch}" class="small-box-footer">功能入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div><!-- ./col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- 引入页脚footer-fragment -->
+  <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+</body>
+</html>

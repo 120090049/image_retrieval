@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<script>
+  layui.use('form', function(){
+    var form = layui.form;
+    //监听提交
+    form.on('submit(formDemo)', function(data){
+      layer.alert(JSON.stringify(data.field),{
+        title: '结果'
+      })
+      return false;
+    });
+  });
+</script>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- 引入页面头header-fragment -->
+  <div th:replace="admin/header::header-nav"></div>
+  <!-- 引入工具栏sidebar-fragment path变量用于选用激活编程蓝色底色 -->
+  <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-4 col-6"><!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>修改密码</h3>
+              </div>
+              <div class="icon">
+                <i class="fa fa-bookmark"></i>
+              </div>
+              <a th:href="@{/admin/updatePassword}" class="small-box-footer">入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div><!-- ./col -->
+          <div class="col-lg-4 col-6"><!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>管理员修改密码</h3>
+              </div>
+              <div class="icon">
+                <i class="fa fa-tags"></i>
+              </div>
+              <a th:href="@{/admin/updatePasswordForAdmin}" class="small-box-footer">入口 <i
+                      class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div><!-- ./col -->
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-6">
+            <p style="color: red">功能如下所示，点击“入口”进行修改密码</p>
+            <!-- 普通用户修改密码 -->
+            <form class="layui-form" action="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">请输入新密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" name="password" required lay-verify="required" placeholder="请输入6-12位密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">第一次新密码</div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">再次输入密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" name="password2" required lay-verify="required" placeholder="请输入6-12位密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">第二次新密码</div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                  <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+              </div>
+            </form>
+          </div><!-- ./col -->
+          <div class="col-lg-4 col-6"><!-- small box -->
+            <p style="color: red">功能如下所示，点击“入口”进行修改密码</p>
+            <!-- 管理员修改密码 -->
+            <form class="layui-form" action="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">工号</label>
+                <div class="layui-input-block">
+                  <input type="text" name="empId" required  lay-verify="required" placeholder="请输入工号" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">请输入新密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" name="password" required lay-verify="required" placeholder="请输入6-12位密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">第一次新密码</div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">再次输入密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" name="password2" required lay-verify="required" placeholder="请输入6-12位密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">第二次新密码</div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                  <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+              </div>
+            </form>
+          </div><!-- ./col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- 引入页脚footer-fragment -->
+  <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Film System</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://news.ubc.ca/wp-content/uploads/2023/08/AdobeStock_559145847-1024x682.jpeg');
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="file"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Back Button -->
+<a href="/" class="btn">Back</a>
+
+<div class="form-container">
+    <h2>Upload Movie</h2>
+    <form id="upload-movie-form" enctype="multipart/form-data" method="post" action="/upload2">
+        <!-- Movie Upload Field -->
+        <div class="form-group">
+            <label for="movie-upload">Choose Movie File</label>
+            <input type="file" id="movie-upload" name="movieUpload" accept=".mp4, .avi, .mkv" required>
+        </div>
+        <!-- Movie Name -->
+        <div class="form-group">
+            <label for="movie-name">Name</label>
+            <input type="text" id="movie-name" name="movieName" placeholder="Enter movie name" required>
+        </div>
+        <!-- Movie Type Dropdown -->
+        <div class="form-group">
+            <label for="movie-type">Type</label>
+            <select class="form-control" id="movie-type" name="movieType" required>
+                <option value="action">Action</option>
+                <option value="adventure">Adventure</option>
+                <option value="comedy">Comedy</option>
+                <option value="drama">Drama</option>
+                <option value="horror">Horror</option>
+                <option value="sci-fi">Sci-Fi</option>
+                <!-- Add other types as needed -->
+            </select>
+        </div>
+        <!-- Movie Year Input -->
+        <div class="form-group">
+            <label for="movie-year">Year</label>
+            <input type="number" id="movie-year" name="movieYear" placeholder="Enter movie year" required>
+        </div>
+        <!-- Movie Country Input -->
+        <div class="form-group">
+            <label for="movie-country">Country</label>
+            <input type="text" id="movie-country" name="movieCountry" placeholder="Enter movie country" required>
+        </div>
+        <!-- Submit Button -->
+        <button type="submit" class="btn">Upload</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.sfwebsystem.dao.FileEntityMapper">
+    <!-- 映射关系 -->
+    <resultMap id="BaseResultMap" type="com.ssj.sfwebsystem.entity.FileEntity">
+        <id column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_path" jdbcType="VARCHAR" property="filePath"/>
+        <result column="uploader_work_id" jdbcType="VARCHAR" property="uploaderWorkId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
+        <result column="file_size" jdbcType="VARCHAR" property="fileSize"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+    </resultMap>
+
+    <!-- 表的所有列名 -->
+    <sql id="Base_Column_List">
+        file_id,file_name,file_path,uploader_work_id,create_time,file_type,file_size,comment
+    </sql>
+
+    <!-- 选择性添加文件信息 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="fileId"
+            parameterType="com.ssj.sfwebsystem.entity.FileEntity">
+        INSERT INTO t_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileId != null">
+                file_id,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="filePath != null">
+                file_path,
+            </if>
+            <if test="uploaderWorkId != null">
+                uploader_work_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="fileType != null">
+                file_type,
+            </if>
+            <if test="fileSize != null">
+                file_size,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileId != null">
+                #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="filePath != null">
+                #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="uploaderWorkId != null">
+                #{uploaderWorkId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileType != null">
+                #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                #{fileSize,jdbcType=VARCHAR},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <!-- 根据信息状态修改员工信息 -->
+    <update id="updateById" parameterType="com.ssj.sfwebsystem.entity.FileEntity">
+        update t_file
+        <set>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where file_id = #{fileId,jdbcType=BIGINT}
+    </update>
+
+    <!--根据主键删除文件-->
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_file
+        set comment='文件删除'
+        where file_id = #{fileId,jdbcType=BIGINT} and comment='文件上传'
+    </update>
+
+    <!--根据主键判断是否删除-->
+    <select id="selectByIdIfDelete" parameterType="java.lang.Long"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_file
+        where file_id = #{fileId,jdbcType=BIGINT} and comment='文件删除'
+    </select>
+
+    <!-- 查询指定要求的文件总数 -->
+    <select id="getTotalFiles" parameterType="Map" resultType="int">
+        select count(*) from t_file
+        where comment='文件上传'
+        <if test="uploaderId!=null">
+            AND uploader_work_id = #{uploaderId}
+        </if>
+        <if test="startTime!=null and endTime!=null">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="fileName!=null">
+            AND file_name like CONCAT('%', #{fileName}, '%')
+        </if>
+    </select>
+
+    <!-- 根据文件id查找文件 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_file
+        where file_id = #{fileId} and comment='文件上传'
+    </select>
+
+    <!-- 分页查询所有文件 -->
+    <select id="selectAll" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_file
+        where comment='文件上传'
+        <if test="uploaderId!=null">
+            AND uploader_work_id = #{uploaderId}
+        </if>
+        <if test="startTime!=null and endTime!=null">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="fileName!=null">
+            AND file_name like CONCAT('%', #{fileName}, '%')
+        </if>
+        order by file_id desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+<!-- 批量删除 -->
+    <update id="deleteBatch">
+        update t_file
+        set comment='文件删除' where file_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getTotalCount" resultType="int">
+        select count(*)
+        from t_file
+        where comment != '文件删除'
+    </select>
+</mapper>
