@@ -49,16 +49,16 @@ class Service:
         self.status = "stopped"
         self.model = VGG16Singleton.VGG16Singleton.instance()
 
-    def get_feature_from_video(self, cap):
-        
+    def get_feature_from_video(self, video_path):
+        cap = cv2.VideoCapture(video_path)
         frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT) # 获取帧数
         frame_rate = cap.get(cv2.CAP_PROP_FPS) # 获取帧速
-        print("帧速：", frame_rate)
+        # print("帧速：", frame_rate)
         duration = frame_count / frame_rate
         frame_list = []
         num_per_sec = 2
         step = int(frame_rate/num_per_sec) # 一秒钟只要两张，step=frame_count/2
-        print("帧数 =", int(frame_count), ". We will extract", num_per_sec, "frames per second, or ", int(frame_count/step), "images in total.")
+        # print("帧数 =", int(frame_count), ". We will extract", num_per_sec, "frames per second, or ", int(frame_count/step), "images in total.")
         current_frame_index = 0
 
         pbar = tqdm(total=frame_count)
@@ -163,13 +163,12 @@ if __name__ == '__main__':
     video_file_name = video_path.split("/")[-1]
     video_name = video_file_name.split(".")[0]
     # 初始化视频文件
-    cap = cv2.VideoCapture(video_path)
     
     # 使用示例
     service = Service()
     
     # func1: video得到特征向量
-    res = service.get_feature_from_video(cap)
+    res = service.get_feature_from_video(video_path)
 
     # func2: 从图片提取特征
     img = cv2.imread(img_path)

@@ -10,7 +10,7 @@ class VGG16Singleton(object):
         if not hasattr(VGG16Singleton, "_instance"):
             VGG16Singleton._instance = VGG16(weights=None, include_top=False)  # 加载VGG16模型
             # 下面这一行是加载权重，可以不要。因为上一句 weights='imagenet' 会自动从网上下载权重文件。
-            path = "weight/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5"
+            path = "E:\\CSC3170\\image_retrieval\\backend\\weight\\vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5"
             VGG16Singleton._instance.load_weights(path)
         return VGG16Singleton._instance
 

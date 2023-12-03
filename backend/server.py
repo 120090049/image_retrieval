@@ -1,16 +1,22 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import MySQLdb
+import mysql.connector
 from service import Service
+import cv2
+import numpy as np
 
 class Server:
    def __init__(self):
       self.status = "stopped"
       self.service = Service()
-          
+   
+   def test(self):
+      print("test")
+      
+   # name -> index
    def movie_info(self, movieName):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -39,15 +45,15 @@ class Server:
             director = row[11]
             picture = row[13]
             #打印结果
-            print ("MID=%s,name=%s,year=%s,boxOffice=%s,country=%s,mark=%s,reviewers=%s,director=%s,picture=%s" % \
-               (MID, name, year, boxOffice, country,mark,reviewers,director,picture))
+            # print ("MID=%s,name=%s,year=%s,boxOffice=%s,country=%s,mark=%s,reviewers=%s,director=%s,picture=%s" % \
+            #    (MID, name, year, boxOffice, country,mark,reviewers,director,picture))
       except:
          print ("Error: unable to fetch data")
       db.close()
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture)
 
    def movie_country(self, country):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -84,7 +90,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture)
 
    def movie_type(self, type):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -122,7 +128,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_year(self, year):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -159,7 +165,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture)
 
    def movie_year_country(self, year,country):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -196,7 +202,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture)
 
    def movie_type_country(self, type,country):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -234,7 +240,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_type_year(self, type,year):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -272,7 +278,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_type_country_year(self, type,country,year):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -310,7 +316,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_type_country_year_director(self, type,country,year,director):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -348,7 +354,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_type_country_director(self, type,country,director):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -386,7 +392,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_type_year_director(self,type,year,director):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -424,7 +430,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_year_director(self,year,director):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -462,7 +468,7 @@ class Server:
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
    def movie_director(self,director):
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
@@ -499,43 +505,49 @@ class Server:
       db.close()
       return (MID, name, year, boxOffice, country,mark,reviewers,director,picture,typeName)
 
-
-   def insert(self,MID,name,year,boxOffice,country,totalFrame,frameRate,mark,reviewers,DID,directorName,Mtypes,cover,mp4):
+   def insert(self,name,year,movie_dir,country,boxOffice = 100000,totalFrame = 10,frameRate = 10,mark= 9.2,reviewers = 10000,DID = 2,totalTime = 10,directorName = "MAGG",Mtypes = ["Drama"],cover = '1111',MID = 0):
       # 打开数据库连接
-      db = MySQLdb.connect("localhost", "root", "123456", "movies", charset='utf8' )
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
 
       # 使用cursor()方法获取操作游标 
       cursor = db.cursor()
-
+      
+      cursor.execute('SELECT COUNT(*) FROM MOVIE')
+      result = cursor.fetchall()
+      MID = result[0][0] + 1 #change the MID
+      
+      #need to update the totalTime and totalFrame before insert
+      
+      cap = cv2.VideoCapture(movie_dir)
+      totalFrame = cap.get(cv2.CAP_PROP_FRAME_COUNT) # 获取帧数
+      frameRate = cap.get(cv2.CAP_PROP_FPS) # 获取帧速
+      print("帧速：", frameRate)
+      totalTime = totalFrame / frameRate
+      print("帧数 =", totalFrame)
+      
       # SQL 插入语句
       sql = "INSERT INTO MOVIE(MID, \
-         NAME, YEAR, BOXOFFICE, COUNTRY,TOTALFRAME,FRAMERATE,MARK,REVIEWERS,DID) \
-         VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s,%s)" % \
-         (MID,"\""+name+"\"",year,boxOffice,"\""+country+"\"",totalFrame,frameRate,mark,reviewers,DID)
-   
+         NAME, YEAR, BOXOFFICE, COUNTRY,TOTALFRAME,FRAMERATE,MARK,REVIEWERS,DID,TOTALTIME) \
+         VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)" % \
+         (MID,"\""+name+"\"",year,boxOffice,"\""+country+"\"",totalFrame,frameRate,mark,reviewers,DID,totalTime)
+
       try:
-         # 执行sql语句
          cursor.execute(sql)
-         # 提交到数据库执行
          db.commit()
          print("finish insert movie")
       except:
-         # 发生错误时回滚
          db.rollback()
          print("error in movie table")
-      #director table  
+
       sql2 = "INSERT INTO DIRECTOR(DID, \
          NAME) \
          VALUES (%s, %s)" % \
          (DID,"\""+directorName+"\"")
       try:
-         # 执行sql语句
          cursor.execute(sql2)
-         # 提交到数据库执行
          db.commit()
          print("finish insert director")
       except:
-         # 发生错误时回滚
          db.rollback()
          print("error in director table")
       #cover table  
@@ -605,38 +617,73 @@ class Server:
             print("error in movie_type table")
          
          #存frame那边的数据
-         frames = self.service.get_feature_from_video(mp4)
+         frames = self.service.get_feature_from_video(movie_dir) #记得改这里，函数封装以后
          frameID = 0
          for frame in frames:
-            sql8 = "INSERT INTO FRAME(MID, FRAMENO, FRAMEEXTRA) VALUES (%s, %s, %s)" % (MID,frameID,frame)
             try:
-            # 执行sql语句
-               cursor.execute(sql8)
-            # 提交到数据库执行
-               db.commit()
-               print("finish frame insert" + str(frameID))
+               bytes_feature = frame.tobytes()
+               cursor.execute('insert into frame values(%s,%s,%s)',([MID,frameID,bytes_feature]))
             except:
-            # 发生错误时回滚
-               db.rollback()
                print("error in frame table"+ str(frameID))
             frameID += 1
+           
       # 关闭数据库连接
       db.close()
+   
+   def movie_features(self, movieName):
+      db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
+
+      # 使用cursor()方法获取操作游标 
+      cursor = db.cursor()
+
+      # SQL 查询语句
+      
+      sql = "SELECT * FROM MOVIE LEFT JOIN FRAME ON MOVIE.`MID` = FRAME.`MID`\
+            WHERE MOVIE.`NAME` = \"" + movieName + "\""
+      try:
+         # 执行SQL语句
+         cursor.execute(sql)
+         # 获取所有记录列表
+         results = cursor.fetchall()
+         # print(results)
+         if len(results) == 0:
+            print("no result")
+            return
+         
+         row = results[0]
+         totalFrame = row[5]
+         totalTime = row[10]
+         featuresInDB = np.empty((0, 1))
+         for row in results:
+            MID = row[0]
+            frameNo = row[12]
+            frameExtra = row[13]
+            featuresInDB = np.append(featuresInDB, np.array([[frameExtra]]), axis=0)
+            #打印结果
+            print ("MID=%s,totalFrame=%s,totalTime=%s,frameNo=%s,frameExtra=%s" % \
+               (MID, totalFrame, totalTime, frameNo, frameExtra))
+      except:
+         print ("Error: unable to fetch data")
+      db.close()
+
+      return (featuresInDB, totalFrame, totalTime)
+   
+   def retrieve_img(self, movie_name, img):
+      (featuresInDB, totalFrame, totalTime) = self.movie_features(movie_name)
+      img_feature = self.service.get_feature_from_img(img)
+      print(img_feature.shape)
+      print(featuresInDB.shape)
+      print(totalFrame)
+      print(totalTime)
+      index, metaRes = self.service.feature_cmp(img_feature, featuresInDB, totalFrame, totalTime)
+      print(metaRes)
+      return metaRes
+
 
 if __name__=="__main__":
-   server = Server()
+   # server = Server()
    # print(server.movie_info("The Shawshank Redemption"))
-   # print(server.movie_country("America"))
-   # print(server.movie_type("Drama"))
-   # print(server.movie_year(1994))
-   # print(server.movie_year_country(1994,"America"))
-   # print(server.movie_type_country("Drama","America"))
-   # print(server.movie_type_year("Drama",1994))
-   # print(server.movie_type_country_year("Drama","America",1994))
-   # print(server.movie_type_country_year_director("Drama","America",1994,"Frank Darabont"))
-   # print(server.movie_type_country_director("Drama","America","Frank Darabont"))
-   # print(server.movie_type_year_director("Drama",1994,"Frank Darabont"))
-   # print(server.movie_director("Frank Darabont"))
-   server.insert(2,"The Godfather",1972,136381073,"America",720,23.9760239,9.2,1962081,2,"Francis Ford Coppola",["Drama","Crime"],"https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",'video.mp4')
-   # print(server.movie_info("The Godfather"))
-    
+   db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
+   db.close()
+   
+   
