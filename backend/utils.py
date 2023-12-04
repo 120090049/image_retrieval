@@ -9,6 +9,7 @@ from PIL import Image
 import numpy as np
 import cv2
 
+FRAME_INTERVAL = 15
 rename_path = './ImageDatabase/InceptionV3'
 suffix_pic = '.jpg'
 suffix_feature = '.npy'

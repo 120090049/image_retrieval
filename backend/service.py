@@ -1,6 +1,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-from utils import image_border_imgArr
+from utils import image_border_imgArr, FRAME_INTERVAL
 from image_retrieve_utils import re_ranking
 
 from tensorflow.keras.applications.vgg16 import preprocess_input
@@ -57,7 +57,8 @@ class Service:
         duration = frame_count / frame_rate
         frame_list = []
         num_per_sec = 2
-        step = int(frame_rate/num_per_sec) # 一秒钟只要两张，step=frame_count/2
+        # step = int(frame_rate/num_per_sec) # 一秒钟只要两张，step=frame_count/2
+        step = FRAME_INTERVAL
         # print("帧数 =", int(frame_count), ". We will extract", num_per_sec, "frames per second, or ", int(frame_count/step), "images in total.")
         current_frame_index = 0
 
@@ -125,7 +126,7 @@ class Service:
         :return: 返回最接近的一秒
         """
         q_g_dist, q_q_dist, g_g_dist = get_three_dist(test_image_feature, features_in_data_base)
-        frame_interval = 15
+        frame_interval = FRAME_INTERVAL
         frame_number_storage = int(frame_count/frame_interval)+1
         frame_list = [frame_interval*i for i in range(frame_number_storage)]
         k1 = int(len(frame_list) / 2) if len(frame_list) < 45 else 40

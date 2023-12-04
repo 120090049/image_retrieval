@@ -44,9 +44,8 @@ def upload_file():
         file_bytes = np.asarray(bytearray(in_memory_file.read()), dtype=np.uint8)    
         # 使用 OpenCV 解码图像数据
         img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-        server.retrieve_img(movie_name, img)
-
-    return 'No file or movie name provided'
+        metaRes = server.retrieve_img(movie_name, img)
+    return metaRes
 
 @app.route('/functhree_page1')  # 跳转到functhree页面
 def functhree_page1():

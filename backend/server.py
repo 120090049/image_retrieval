@@ -617,12 +617,13 @@ class Server:
             print("error in movie_type table")
          
          #存frame那边的数据
-         frames = self.service.get_feature_from_video(movie_dir) #记得改这里，函数封装以后
+         frames = self.service.get_feature_from_video(movie_dir) 
          frameID = 0
          for frame in frames:
             try:
                bytes_feature = frame.tobytes()
                cursor.execute('insert into frame values(%s,%s,%s)',([MID,frameID,bytes_feature]))
+               db.commit()
             except:
                print("error in frame table"+ str(frameID))
             frameID += 1
@@ -640,6 +641,7 @@ class Server:
       
       sql = "SELECT * FROM MOVIE LEFT JOIN FRAME ON MOVIE.`MID` = FRAME.`MID`\
             WHERE MOVIE.`NAME` = \"" + movieName + "\""
+      
       try:
          # 执行SQL语句
          cursor.execute(sql)
@@ -650,18 +652,21 @@ class Server:
             print("no result")
             return
          
+         ## get basic info from the first record
          row = results[0]
          totalFrame = row[5]
          totalTime = row[10]
-         featuresInDB = np.empty((0, 1))
+
+         ## get all features
+         featuresInDB = np.empty((0, 512))
          for row in results:
             MID = row[0]
             frameNo = row[12]
-            frameExtra = row[13]
-            featuresInDB = np.append(featuresInDB, np.array([[frameExtra]]), axis=0)
+            frameExtra = np.frombuffer(row[13], dtype=np.float64).reshape(512)
+            featuresInDB = np.vstack((featuresInDB, np.array([frameExtra])))
             #打印结果
-            print ("MID=%s,totalFrame=%s,totalTime=%s,frameNo=%s,frameExtra=%s" % \
-               (MID, totalFrame, totalTime, frameNo, frameExtra))
+            # print ("MID=%s,totalFrame=%s,totalTime=%s,frameNo=%s,frameExtra=%s" % \
+            #    (MID, totalFrame, totalTime, frameNo, frameExtra))
       except:
          print ("Error: unable to fetch data")
       db.close()
@@ -671,19 +676,25 @@ class Server:
    def retrieve_img(self, movie_name, img):
       (featuresInDB, totalFrame, totalTime) = self.movie_features(movie_name)
       img_feature = self.service.get_feature_from_img(img)
-      print(img_feature.shape)
-      print(featuresInDB.shape)
-      print(totalFrame)
-      print(totalTime)
+      # np.save("E:\\CSC3170\\image_retrieval\\backend\\features.npy",featuresInDB) # 保存特征
+      # np.save("E:\\CSC3170\\image_retrieval\\backend\\img_feature.npy",img_feature) # 保存特征
+      
+      # print(img_feature[0:5])
+      # print(featuresInDB[0][0:5])
+      # print(totalFrame)
+      # print(totalTime)
       index, metaRes = self.service.feature_cmp(img_feature, featuresInDB, totalFrame, totalTime)
-      print(metaRes)
       return metaRes
 
 
 if __name__=="__main__":
-   # server = Server()
-   # print(server.movie_info("The Shawshank Redemption"))
-   db = mysql.connector.connect(host="localhost", user="root", password="Clp20020528!", database="movies", charset='utf8')
-   db.close()
+   server = Server()
+   img_feature = np.load('E:\\CSC3170\\image_retrieval\\ImageDB\\feature\\img_feature.npy')
+   featuresInDB = np.load('E:\\CSC3170\\image_retrieval\\ImageDB\\feature\\features.npy')
+   # featuresInDB = np.load('E:\\CSC3170\\image_retrieval\\ImageDB\\feature\\COD.npy')
+   
+   index, metaRes = server.service.feature_cmp(img_feature, featuresInDB, 750, 30)
+
+
    
    
