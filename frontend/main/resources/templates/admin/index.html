@@ -1,83 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<header th:replace="admin/header::header-fragment"></header>
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
-    <!-- 引入页面头header-fragment -->
-    <div th:replace="admin/header::header-nav"></div>
-    <!-- 引入工具栏sidebar-fragment path变量用于选用激活编程蓝色底色 -->
-    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Main content -->
-        <div class="content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-4 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3 th:text="${imageCount}">65</h3>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Information Retrieval</title>
+<!-- 这里使用 url_for 来引用静态文件 -->
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
 
-                                <p>图像数量</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-bookmark"></i>
-                            </div>
-                            <a th:href="@{/admin/imageList}" class="small-box-footer">浏览图像入口 <i
-                                    class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-4 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3 th:text="${videoCount}">65</h3>
+<h1 class="main-title">Movie Information Retrieval</h1> <!-- 添加大标题 -->
 
-                                <p>视频数量</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-tags"></i>
-                            </div>
-                            <a th:href="@{/admin/videoList}" class="small-box-footer">浏览视频入口 <i
-                                    class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-4 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-dark">
-                            <div class="inner">
-                                <h3 th:text="${fileCount}">65</h3>
-
-                                <p>文件数量</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-heart"></i>
-                            </div>
-                            <a th:href="@{/admin/fileList}" class="small-box-footer">浏览文档入口 <i
-                                    class="fa fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                </div>
-                <img th:src="@{/admin/dist/img/C919.png}" style="width: 100%">
-            </div><!-- /.container-fluid -->
-        </div>
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-    <!-- 引入页脚footer-fragment -->
-    <div th:replace="admin/footer::footer-fragment"></div>
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="Search movies...">
+  <a href="/movie-details" class="btn btn-primary btn-block">Search</a>
+<!--  <button onclick="searchMovie()">Search</button>-->
 </div>
-<!-- jQuery -->
-<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
-<!-- Bootstrap 4 -->
-<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<!-- AdminLTE App -->
-<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+
+<div class="filter-group" id="region-filter">
+  <button class="filter-button active" data-value="all places">All Places</button>
+  <button class="filter-button" data-value="chinese">Chinese</button>
+  <button class="filter-button" data-value="Hong Kong">Hong Kong</button>
+  <button class="filter-button" data-value="America">America</button>
+  <button class="filter-button" data-value="Europe">Europe</button>
+  <button class="filter-button" data-value="Korea">Korea</button>
+  <button class="filter-button" data-value="Japan">Japan</button>
+  <button class="filter-button" data-value="Thailand">Thailand</button>
+  <button class="filter-button" data-value="else">else</button>
+  <!-- ...更多地区按钮... -->
+</div>
+
+<div class="filter-group" id="type-filter">
+  <button class="filter-button active" data-value="all types">All Types</button>
+  <button class="filter-button" data-value="action">action</button>
+  <button class="filter-button" data-value="comedy">comedy</button>
+  <button class="filter-button" data-value="romance">romance</button>
+  <button class="filter-button" data-value="science fiction">science fiction</button>
+  <button class="filter-button" data-value="thriller">thriller</button>
+  <button class="filter-button" data-value="horror">horror</button>
+  <button class="filter-button" data-value="crime">crime</button>
+  <button class="filter-button" data-value="war">war</button>
+  <button class="filter-button" data-value="drama">drama</button>
+  <button class="filter-button" data-value="adventure">adventure</button>
+  <button class="filter-button" data-value="else">else</button>
+  <!-- ...更多类型按钮... -->
+</div>
+
+<div class="filter-group" id="year-filter">
+  <button class="filter-button active" data-value="all years">All Years</button>
+  <button class="filter-button" data-value="2023">2023</button>
+  <button class="filter-button" data-value="2022">2022</button>
+  <button class="filter-button" data-value="2021">2021</button>
+  <button class="filter-button" data-value="2020">2020</button>
+  <button class="filter-button" data-value="2019">2019</button>
+  <button class="filter-button" data-value="2018">2018</button>
+  <button class="filter-button" data-value="2017">2017</button>
+  <button class="filter-button" data-value="2016">2016</button>
+  <button class="filter-button" data-value="2015">2015</button>
+  <button class="filter-button" data-value="else">else</button>
+  <!-- ...更多年份按钮... -->
+</div>
+
+<div class="movies-display">
+  <!-- Movie items will be populated here -->
+</div>
+
+<!--<script src="scripts.js"></script>-->
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
-</html>
+</html>n

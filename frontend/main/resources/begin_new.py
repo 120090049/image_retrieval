@@ -36,7 +36,7 @@ def movie_details():
 def functwo_page1():
     return render_template('admin/functwo_page1.html')
 
-# image retrieval page
+# 第一个上传页面
 @app.route('/upload', methods=['POST'])  
 def upload_file():
     if 'imageUpload' not in request.files:
@@ -53,6 +53,19 @@ def upload_file():
         img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
         metaRes = server.retrieve_img(movie_name, img)
     return metaRes
+    # if file and movie:
+    #     filename = secure_filename(file.filename)
+    #     filepath = os.path.join(r'E:\CSC3170\image_retrieval\frontend\main\resources\templates\admin', filename)
+        
+    #     file.save(filepath)
+
+    #     try:
+    #         # subprocess.run(['python', 'C:\\Users\\jingyiYang\\Desktop\\CSC3170project\\sf_web_system-master\\src\\main\\resources\\try.py', filepath, movie], check=True)
+    #         return 'Python script executed successfully.'
+    #     except subprocess.CalledProcessError:
+    #         return 'Failed to execute Python script.'
+
+    # return 'No file or movie name provided'
 
 @app.route('/functhree_page1')  # 跳转到functhree页面
 def functhree_page1():
@@ -73,8 +86,8 @@ def upload_file2():
 
     if file and movie_name and movie_type and movie_year and movie_country:
         filename = secure_filename(file.filename)
-        movie_dir = os.path.join(UPLOAD_FOLDER, filename)  # 修改为您希望保存电影的路径
-        file.save(movie_dir)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)  # 修改为您希望保存电影的路径
+        file.save(filepath)
 
         # 将电影信息添加到列表中
         movie_info_list.append({
@@ -82,9 +95,9 @@ def upload_file2():
             'type': movie_type,
             'year': movie_year,
             'country': movie_country,
-            'file_path':movie_dir
+            'file_path':filepath
         })
-        server.insert(movie_name, movie_year, movie_dir, movie_country)
+        server.insert(movie_name, movie_year, filepath, movie_country)
 
         # 打印电影信息
         print(movie_info_list)

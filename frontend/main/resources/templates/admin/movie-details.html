@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='details.css') }}">
+</head>
+<body>
+
+  <button id="go-back-button" class="go-back-button">Go Back</button>
+  <div class="big-container">
+    <div class="movie-detail-container">
+      <!-- 注意这里移除了 < img 前面的空格，并确保了语法正确 -->
+      <img src="https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_SX300.jpg" alt="Movie Image" id="movie-image" class="movie-image">
+    </div>
+
+    <div class="movie-text" id="movie-text">
+      <p>12 Angry Men</p>
+      <p>Crime, Drama</p>
+      <p>America</p>
+      <p>1957</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='details.js') }}"></script>
+</body>
+</html>

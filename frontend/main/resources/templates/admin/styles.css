@@ -1,0 +1,95 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #333; /* 整个页面的背景色 */
+  color: #fff; /* 默认文本颜色设置为白色 */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column; /* 子元素垂直排列 */
+  align-items: center; /* 子元素水平居中 */
+}
+
+.main-title {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-size: 2.5em; /* 更大的标题字体大小 */
+}
+
+.search-bar {
+  margin-bottom: 30px; /* 增加与筛选按钮的间距 */
+}
+
+.search-bar input {
+  padding: 10px;
+  margin-right: 10px;
+  width: 400px; /* 增大输入框 */
+  border: none;
+  border-radius: 4px; /* 输入框圆角 */
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px; /* 按钮圆角 */
+  background-color: #555; /* 按钮背景色 */
+  color: white;
+  cursor: pointer;
+}
+
+.filter-group {
+  display: flex;
+  justify-content: flex-start; /* 改为flex-start以左对齐 */
+  flex-wrap: wrap; /* 允许按钮换行 */
+  gap: 10px; /* 为按钮添加间距 */
+  width: 80%; /* 限制按钮组宽度 */
+  margin-bottom: 10px; /* 调整行距 */
+}
+
+.filter-button {
+  padding: 5px 15px;
+  background-color: #333; /* 按钮背景色与页面背景一致 */
+  border: 1px solid #444; /* 细微边框以便于按钮能够被区分开 */
+  border-radius: 4px; /* 按钮圆角 */
+  color: white;
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  background-color: #444; /* 鼠标悬停时的按钮背景色 */
+}
+
+.filter-button.active {
+  color: #4CAF50; /* 活跃状态的按钮字体颜色改变 */
+  border-color: #4CAF50; /* 活跃状态的按钮边框颜色改变 */
+}
+
+.movies-display {
+  width: 80%; /* 限制电影展示宽度 */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* 电影项左对齐 */
+  gap: 20px; /* 为电影项添加间距 */
+}
+
+.movie-item {
+  width: 200px;
+  margin: 10px;
+  background-color: #444; /* 电影项背景色 */
+  padding: 10px;
+  border-radius: 10px; /* 圆角 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 阴影效果 */
+  transition: transform 0.2s; /* 鼠标悬浮时的变换效果 */
+}
+
+.movie-item:hover {
+  transform: scale(1.05); /* 鼠标悬浮时稍微放大 */
+}
+
+.movie-image {
+  width: 100%; /* 图片宽度 */
+  border-radius: 5px; /* 图片圆角 */
+}
+
+.movie-info {
+  text-align: center; /* 文本居中 */
+}

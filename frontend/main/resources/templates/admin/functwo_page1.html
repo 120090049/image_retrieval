@@ -26,6 +26,33 @@
             color: white; /* 上传按钮文字颜色 */
             border: 1px solid #007bff; /* 上传按钮边框颜色 */
         }
+        /* 输入框样式 */
+        input[type="text"] {
+                border: 2px solid rgba(255, 255, 255, 0.5); /* 设置透明度为0.5的白色边框 */
+                font-size: 16px; /* 字体大小 */
+                padding: 10px; /* 内边距 */
+                margin-bottom: 10px; /* 与下一个元素的间距 */
+                border-radius: 5px; /* 边框圆角 */
+                background-color: rgba(255, 255, 255, 0.1); /* 轻微透明的背景色 */
+                color: white; /* 文本颜色 */
+        }
+
+/* 按钮样式 */
+        button {
+            border: 2px solid rgba(255, 255, 255, 0.5); /* 设置透明度为0.5的白色边框 */
+            font-size: 16px; /* 字体大小 */
+            padding: 10px 20px; /* 内边距 */
+            border-radius: 5px; /* 边框圆角 */
+            background-color: rgba(255, 255, 255, 0.1); /* 轻微透明的背景色 */
+            color: white; /* 文本颜色 */
+            cursor: pointer; /* 鼠标悬停时显示指针 */
+            transition: background-color 0.3s ease; /* 背景色渐变效果 */
+        }
+
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* 鼠标悬停时背景色更加透明 */
+        }
+
 
         .card {
             margin: 0 auto; /* 水平居中 */
@@ -35,7 +62,7 @@
         }
 
         .card-body {
-            background-color: #ffffff; /* 卡片内部背景颜色 */
+            background-color: transparent; /* Makes the background of the card-body transparent */
         }
 
         #previewImage {
@@ -43,6 +70,16 @@
             height: auto;
             margin-top: 15px; /* 图片上方留出一些空间 */
         }
+        
+    
+        label[for="movieInput"] {
+        color: #ffffff; /* Makes the text color white */
+        font-size: 20px; /* Increases the font size */
+        display: block; /* Ensures the label is on its own line */
+        margin-bottom: 10px; /* Adds some space below the label */
+        }
+
+
 
         .back-link {
             position: absolute;
@@ -76,23 +113,24 @@
                         <!-- 文件和图片上传部分 -->
                         <form action="/upload" method="post" enctype="multipart/form-data">
                             <!-- 选择图片上传 -->
-                            
                             <input class="layui-upload-file" type="file" accept="image/*" name="imageUpload" id="imageUpload" required>
     
                             <!-- 显示上传的图片 -->
                             <img id="previewImage" src="#" alt="Uploaded Image" style="display:none; max-width: 100%; height: auto;" />
-
+                           
+                            
                             <!-- 选择电影 -->
                             <div>
+
                                 <label for="movieInput">What movie do you choose:</label>
                                 <input type="text" id="movieInput" name="movieInput" required>
                             </div>
     
                             <!-- 确认按钮 -->
-                             <button type="submit" class="layui-btn" id="testListAction">Ensure</button>
+                            <button type="submit" class="layui-btn" id="testListAction">Ensure</button>
                         </form>
-
-                        </div>
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -112,6 +150,8 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        
     </script>
     
 </body>
